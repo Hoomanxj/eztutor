@@ -1,1 +1,1 @@
-web: gunicorn eztutor.run:app
+web: gunicorn run:app
