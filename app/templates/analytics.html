@@ -1,0 +1,107 @@
+{% extends 'layout.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<!-- Main analytics container -->
+<div x-data="analytics('{{ current_user.role }}')" x-init="init()" class="p-6 space-y-8">
+
+    <!-- Grid Container -->
+    <div class="grid grid-cols-1 gap-4">
+        
+        <!-- Flex Container for Selects -->
+        <div class="flex justify-evenly items-center gap-4">
+            
+            <!-- Course Select -->
+            <div>
+                <select id="course-select" x-model="selectedCourse" 
+                        @change="
+                            if (role === 'student') {
+                                fetchCourseScores({ courseId: selectedCourse });
+                            } else if (role === 'teacher') {
+                                fetchStudents(selectedCourse);
+                                // Optionally, after fetching students, fetch scores if students are available
+                            }"
+                        class="bg-pink-700 mt-1 block w-full border-pink-700 border rounded-full shadow-sm p-2 focus:ring-pink-700 focus:border-pink-700 animate-pulse">
+                    <option value="">Select a course</option>
+                    <template x-for="course in courses" :key="course.id">
+                        <option :value="course.id" x-text="course.name"></option>
+                    </template>
+                </select>
+            </div>
+
+            <!-- Student Select (Visible Only for Teachers) -->
+            <div x-show="role === 'teacher' && selectedCourse">
+                <div>
+                    <select id="student-select" x-model="selectedStudent" 
+                            @change="fetchCourseScores({courseId: selectedCourse, studentId: selectedStudent})"
+                            class="bg-pink-700 mt-1 block w-full border-pink-700 border rounded-full shadow-sm p-2 focus:ring-pink-700 focus:border-pink-700 animate-pulse">
+                        <option value="">Select a Student</option>
+                        <template x-for="student in students" :key="student.id">
+                            <option :value="student.id" x-text="student.name"></option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="min-h-screen">
+            <!-- If no course available -->
+            <template x-show="!courses || Object.keys(courses).length ===0">
+                <div class="flex justify-center items-center">
+                    <h3 x-text="`You don't have any courses yet!`" class="text-xl"></h3>
+                </div>
+            </template>
+
+            <!-- Category Scores Pie Chart -->
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                <div class="transition ease-in-out md:hover:scale-125 lg:hover:translate-x-5 lg:hover:translate-y-2 duration-700 bg-amber-500 p-6 rounded-lg shadow w-full md:w-2/3 lg:w-2/5">
+                    <h3 class="text-lg font-semibold mb-4">Category Scores</h3>
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-md">
+                        <canvas id="categoryScoreChart" class="w-full h-auto"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flex Container for Speaking and Listening Scores -->
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <!-- Speaking Scores -->
+                <div class="transition ease-in-out md:hover:scale-125 lg:hover:translate-x-5 lg:hover:translate-y-2 duration-700 bg-amber-500 p-4 rounded-lg shadow w-full md:w-1/2">
+                    <h3 class="text-lg font-semibold mb-4">Speaking Scores</h3>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <canvas id="speakingScoreChart" width="300" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Listening Scores -->
+                <div class="transition ease-in-out md:hover:scale-125 lg:hover:-translate-x-5 lg:hover:translate-y-2 duration-700 bg-amber-500 p-4 rounded-lg shadow w-full md:w-1/2">
+                    <h3 class="text-lg font-semibold mb-4">Listening Scores</h3>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <canvas id="listeningScoreChart" width="300" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flex Container for Writing and Reading Scores -->
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <!-- Writing Scores -->
+                <div class="transition ease-in-out md:hover:scale-125 lg:hover:translate-x-5 lg:hover:-translate-y-2 duration-700 bg-amber-500 p-4 rounded-lg shadow w-full md:w-1/2">
+                    <h3 class="text-lg font-semibold mb-4">Writing Scores</h3>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <canvas id="writingScoreChart" width="300" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Reading Scores -->
+                <div class="transition ease-in-out md:hover:scale-125 lg:hover:-translate-x-5 lg:hover:-translate-y-2 duration-700 bg-amber-500 p-4 rounded-lg shadow w-full md:w-1/2">
+                    <h3 class="text-lg font-semibold mb-4">Reading Scores</h3>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <canvas id="readingScoreChart" width="300" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endblock %}

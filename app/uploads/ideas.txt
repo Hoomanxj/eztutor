@@ -1,0 +1,87 @@
+assignment criteria:
+lexical resources = level and versitality of words
+grammatical range = level and range of grammar
+pronunciation = native-like pronunciation
+speaking fluency = pace of speaking
+speaking accuracy = accurate usage of English
+reading fluency = pace of reading
+reading comprehension = contextual understanding
+listening comprehension = contextual understanding 
+task achievement writing = accurately addressing the prompt
+task achievement speaking = accurately addresing the prompt
+coherence speaking = unison of idea
+coherence writing = unison of idea
+cohesion speaking = lexical connectedness
+cohesion writing = lexical connectedness
+
+categories
+speaking
+listening
+writing
+reading
+
+teacher:
+id
+name
+last name
+date of birth
+gender
+email
+cell
+country
+address
+education
+education level
+native language
+teaching language
+
+student:
+id
+teacher_id
+name
+last name
+date of birth
+gender
+email
+cell
+country
+address
+education
+education level
+native language
+learning language
+
+assignment:
+id
+teacher_id
+student_id (maybe just student id would be enough; not sure)
+description
+start date
+submission date
+end date
+
+
+course:
+id
+teacher_id
+student_id (maybe just teacher id would be enough; not sure)
+description
+start date
+end date
+number of sessions
+session duration
+sessions per week
+number of students
+
+category:
+id
+tag_id
+description
+
+tag:
+id
+assignment_id
+tag name
+description
+
+

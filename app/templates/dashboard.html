@@ -1,0 +1,176 @@
+{% extends "layout.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+
+
+{% block content %}
+
+<!-- Main dashboard container -->
+<div x-data="dashboard('{{ current_user.role }}')" x-init="init()" class="p-1 min-h-screen bg-gray-300 rounded shadow">
+    <h2 class="font-bold p-1 text-center">{{ current_user.first_name.title() }}'s Dashboard</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        
+        <!-- First column: courses -->
+        <div class="bg-gray-100 border-4 border-amber-600 rounded p-4">
+            <!-- If no courses found -->
+            <template x-if="!courses || courses.length === 0">
+                <p class="text-center text-gray-500">
+                    No courses to show yet!
+                </p>
+            </template>
+
+            <!-- Courses list -->
+            <template x-if="courses && courses.length > 0">
+                <div class="h-[400px] overflow-y-auto snap-y snap-mandatory scroll-smooth">
+                    <template x-for="course in courses" :key="course.id">
+                        <div class="snap-start min-h-[100px] border-b border-pink-700 grid place-items-center p-5 bg-gray-100">
+                            <h3 class="font-bold text-xl" x-text="course.name"></h3>
+                            <p x-text="course.weekdays"></p>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+        
+        <!-- Middle column: schedule, upcoming -->
+        <div class="relative grid grid-cols-1 p-1">
+
+            <!-- Schedule -->
+            <div class="p-4 bg-gray-100 border-4 border-amber-600 rounded shadow">
+                <p class="font-semibold p-4 text-center" x-text="`Schedule`"></p>
+
+                <!-- If not schedule found -->
+                <template x-if="!schedule || courses.length === 0">
+                    <p class="text-center text-gray-500"
+                        x-text="`You don't have anything planned for today!`"></p>
+                </template>
+
+                <!-- Display schedule-->
+                <div>
+                    <div>
+                        <template x-if="schedule && schedule.length > 0">
+                            <div class="space-y-4">
+                                <ul class="grid grid-cols-2 gap-x-4 sm:gap-x-6 md:gap-x-8 justify-center">
+                                    <li>
+                                        <a 
+                                            class="bg-yellow-600 border-2 p-4 rounded block w-full text-center" 
+                                            :class="'border-yellow-600'" 
+                                            x-text="`class`">
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            class="bg-green-600 border-2 p-4 rounded block w-full text-center" 
+                                            :class="'border-green-600'" 
+                                            x-text="`custom`">
+                                        </a>
+                                    </li>
+                                </ul>
+                                <template x-for="(event, index) in schedule" :key="event.from_time + '-' + index">
+                                    <div class="flex justify-start items-center">
+                                        <div class="w-24 text-right pr-4 text-sm text-gray-700">
+                                            <div x-text="event.time_from"></div>
+                                            <div x-text="event.time_to"></div>
+                                        </div>
+                                        <div 
+                                            class="flex justify-center items-center rounded-full shadow p-4"
+                                            :class="getTaskClass(event.type)">
+                                            <div
+                                                class="font-semibold"
+                                                x-text="event.name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming session info -->
+            <div class="p-2 bg-gray-100 border-4 border-amber-600 rounded shadow">
+                <p class="font-semibold text-center" x-text="`Upcoming`"></p>
+                <div>
+
+                    <!-- If not upcoming session found -->
+                    <template x-if="!upcomingSession || Object.keys(upcomingSession).length === 0">
+                        <div>
+                            <p class="text-center text-gray-500"
+                            x-text="`You don't have any upcoming classes!`"></p>
+                        </div>
+                    </template>
+
+                    <!-- Session info -->
+                    <template x-if="upcomingSession && Object.keys(upcomingSession).length > 0">
+                        <div class="grid grid-cols-1">
+                            <div class="flex flex-wrap justify-evenly">
+                                <p class="text-lg" x-text="`Class: ${upcomingCourse.name}`"></p>
+                                <p class="text-lg" x-text="`Date: ${upcomingSession.date}`"></p>
+                                <p class="text-lg" x-text="`Start: ${upcomingSession.start_hour}`"></p>
+                            </div>
+                            <div class="flex justify-center mt-10">
+                                <a :href="upcomingCourse.link" target="_blank" rel="noopener noreferrer" x-text="`Enter Class`" class="text-xl text-cyan-500 underline"></a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Third column: analytics -->
+        <div class="grid grid-cols-1 p-1 bg-gray-200 border-4 border-amber-600 rounded">
+            <div class="p-4 bg-gray shadow">
+                <p class="font-semibold text-center" x-text="`Analytics`"></p>
+
+                <!-- If no courses found -->
+                <template x-if="!courses || courses.length === 0">
+                    <p class="text-center text-gray-500"
+                        x-text="`You don't have any courses yet!`"></p>
+                </template>
+
+                <!-- Course analytics: course select, student select (teacher only), category score chart -->
+                <template x-if="courses && courses.length > 0">
+                    <div>
+                        <!-- Course select -->
+                        <div class="flex justify-center items-center">
+                            <select id="course-select" x-model="courseId" 
+                                    @change="
+                                            if (role === 'student') {
+                                            fetchCourseScores({ courseId: courseId });
+                                            } else if (role === 'teacher') {
+                                            fetchStudents(courseId);
+                                            // Once students are fetched, also refresh scores if needed
+                                            fetchCourseScores({ courseId: courseId, studentId: selectedStudent });
+                                            }"
+                                    class="bg-gray-300 mt-1 block border-gray-300 rounded-full shadow-sm p-2 focus:ring-pink-700 focus:border-pink-700 animate-pulse">
+                                <option value="">Select a course</option>
+                                <template x-for="course in courses" :key="course.id">
+                                    <option :value="course.id" x-text="course.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <!-- Student elect (only teachers) -->
+                        <template x-if="role === 'teacher' && courseId">
+                            <div class="flex justify-center items-center">
+                                <select id="student-select" x-model="selectedStudent" 
+                                        @change="fetchCourseScores({courseId: courseId, studentId: selectedStudent})"
+                                        class="bg-gray-300 mt-1 block border border-gray-300 rounded-full  shadow-sm p-2 focus:ring-pink-700 focus:border-pink-700 animate-pulse">
+                                    <template x-for="student in students" :key="student.id">
+                                        <option :value="student.id" x-text="student.name"></option>
+                                    </template>
+                                </select>
+                            </div>
+                        </template>
+                    
+                        <!-- Analytics chart -->
+                        <div class="w-full">
+                            <canvas class="w-full h-full" id="categoryScoreChart"></canvas>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

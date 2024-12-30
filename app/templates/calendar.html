@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+
+<!-- Main calendar container-->
+<div x-data="calendar()" x-init="init()" class="p-4">
+
+    <!-- Calendar header -->
+    <div class="flex justify-center items-center gap-5">
+        <button @click="prevMonth()" class="transition ease-in-out px-4 py-2 delay-75 bg-amber-600 rounded-full hover:bg-pink-600 hover:scale-110">Previous</button>
+        <h2 class="text-2xl font-bold" x-text="monthName + ' ' + year"></h2>
+        <button @click="nextMonth()" class="transition ease-in-out px-7 py-2 delay-75 bg-amber-600 rounded-full hover:bg-pink-600 hover:scale-110">Next</button>
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="grid grid-cols-7 gap-x-2">
+
+        <!-- Days of week -->
+        <template x-for="day in daysOfWeek" :key="day">
+            <div class="text-center font-semibold py-2 border-b" x-text="day"></div>
+        </template>
+
+        <!-- Calendar days -->
+        <template x-for="(day, index) in currentMonthDays" :key="day.date + '-' + index">
+            <div class="grid grid-cols-1 p-1 place-items-center">
+              <div 
+                class="grid grid-cols-1 p-1 w-[100px] h-[100px] place-items-center rounded border transition ease-in-out hover:scale-110 duration-500" 
+                :class="{
+                  'border-gray-300 bg-gray-200': day.date,   /* normal cell with date */
+                  'border-transparent bg-gray-100 opacity-50': !day.date  /* cell without date */
+                }"
+                @click="day.date && openDayModal(day.date)">
+                
+                <div class="cursor-pointer text-center font-bold" x-text="day.date ? day.date.split('-').pop() : ''"></div>
+                <div>
+                    <!-- If there class today -->
+                    <div x-show="day.date && hasClass(day.date)">
+                        <div class="text-center bg-yellow-600 text-white px-2 py-1 rounded text-xs cursor-default" x-text="`Class`"></div>
+                    </div>
+                    
+                    <!-- If there is custom task today-->
+                    <div x-show="day.date && hasTask(day.date)" class="mt-1">
+                        <div class="bg-green-700 text-white px-2 py-1 rounded text-xs cursor-default" x-text="`Custom`"></div>
+                    </div>
+                </div>
+              </div>
+              
+              <!-- Add task button -->
+              <div class="flex justify-center">
+                <button @click.stop="openTaskModal(day.date)" 
+                  class="mt-2 text-xs bg-pink-700 text-white px-2 py-1 rounded hover:bg-yellow-300" 
+                  :disabled="!day.date"> <!-- Disable if day.date is not available -->
+                  Add Task
+                </button>
+              </div>
+            </div>
+        </template>          
+    </div>
+
+    <!-- Add task modal -->
+    <div x-show="showTaskModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-md relative" @click.away="showTaskModal = false">
+            <h2 class="text-xl mb-4">Add Task for <span x-text="selectedDateForTask"></span></h2>
+            <form @submit.prevent="saveTask" x-ref="customTaskForm" class="space-y-4">
+                <div x-html="formHtml"></div>
+            </form>
+            <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" @click="showTaskModal = false">✕</button>
+        </div>
+    </div>
+
+    <!-- Day view modal -->
+    <div x-show="showDayModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-gray-200 p-4 justify-center items-center rounded-lg relative overflow-y-auto max-h-screen" @click.away="showDayModal = false">
+            <h2 class="text-2xl mb-4">Events for <span x-text="selectedDateForTask"></span></h2>
+            <template x-if="selectedDayEvents && selectedDayEvents.length > 0">
+                <div class="space-y-4">
+                    <template x-for="event in selectedDayEvents" :key="event.id">
+                        <div class="flex items-start">
+                            <div class="w-24 text-center pr-4 text-sm text-gray-700">
+                                <div x-text="event.start_time"></div>
+                                <div x-text="event.end_time"></div>
+                            </div>
+                            <div class="flex-1 bg-blue-100 p-2 rounded shadow">
+                                <div class="font-semibold" x-text="event.name"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            
+            <!-- If not schedule available-->
+            <template x-if="!selectedDayEvents || selectedDayEvents.length === 0">
+                <p class="text-gray-500">No events scheduled for this day.</p>
+            </template>
+            <div class="flex justify-center items-center">
+                <button class="mt-4 px-4 py-2 bg-amber-600 text-white rounded hover:bg-pink-700" @click="showDayModal = false">Close</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+{% endblock %}

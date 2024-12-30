@@ -1,0 +1,62 @@
+<!-- app/templates/welcome.html -->
+
+{% extends 'layout.html' %}
+{% block title %}Welcome To eztutor!{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll/dist/locomotive-scroll.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/locomotive-scroll/dist/locomotive-scroll.min.js"></script>
+
+<!-- Main welcome container -->
+<div data-scroll-container>
+    <section class="section" data-scroll-section>
+        <h1 data-scroll data-scroll-speed="2">Welcome to EZTutor</h1>
+    </section>
+    <section class="section" data-scroll-section>
+        <p data-scroll data-scroll-speed="-2">Scroll down to see amazing animations!</p>
+    </section>
+</div>
+<div class="flex justify-center items-center">
+    <div class="flex flex-col justify-center items-center">
+        <p>Welcome to EZtutor!</p>
+        <p>Where teaching made easier</p>
+    </div>
+    
+</div>
+<div class="flex justify-center items-center">
+    <p class="text-center">Our goal is to provide language tutors and their students with tools <br> necessary to handle their class arrangment needs.</p>
+</div>
+<div class="flex justify-center items-center">
+    <h2>What can you find here?</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2">
+    <div class="flex justify-center items-center">
+        <p>Courses</p>
+    </div>
+    <div class="flex justify-center items-center">
+        <p>Assignments</p>
+    </div>
+    <div class="flex justify-center items-center">
+        <p>Sessions</p>
+    </div>
+    <div class="flex justify-center items-center">
+        <p>Calendar</p>
+    </div>
+    <div class="flex justify-center items-center">
+        <p>Dashboard</p>
+    </div>
+    <div class="flex justify-center items-center">
+        <p>Assignments</p>
+    </div>
+    <div class="flex justify-center items-center">
+        <p>Analytics</p>
+    </div>
+    <div class="flex justify-center items-center">
+        <p>Dashboard</p>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import field %}
+{% block title %}Registry{% endblock %}
+
+{% block content %}
+
+<!-- Main registr conatiner -->
+<div x-data="register()" x-init="init()" class="space-y-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 p-2 min-h-screen">
+        <div class="col-span-2">
+            
+            <!-- Toggles: teacher, student -->
+            <ul class="flex justify-evenly items-center mt-3">
+
+                <!-- Teacher toggle-->
+                <li class="border border-amber-600 rounded-lg bg-amber-600 hover:bg-pink-700 p-2">
+                    <label class="flex items-center cursor-pointer w-full h-full">
+                        <input type="radio" name="form-type-radio" @click="fetchForm('teacher')" class="mr-2">
+                        <span class="text-white">Register as Teacher</span>
+                    </label>
+                </li>
+
+                <!-- Student toggle-->
+                <li class="border border-amber-600 rounded-lg bg-amber-600 hover:bg-pink-700 p-2">
+                    <label class="flex items-center cursor-pointer w-full h-full">
+                        <input type="radio" name="form-type-radio" @click="fetchForm('student')" class="mr-2">
+                        <span class="text-white">Register as Student</span>
+                    </label>
+                </li>
+            </ul>
+    
+            <!-- Registration forms -->
+            <div class="flex bg-cyan-400 p-3">
+
+                <!-- Teacher form-->
+                <template x-if="teacherForm">
+                    <form id="teacher-form" @submit.prevent="registerUser('teacher')" class="bg-gray-200 p-4 rounded shadow space-y-4 w-full">
+                        <div x-html="formHtml"></div>
+                        <input type="hidden" name="course_code" value="{{ course_code }}">
+                    </form>
+                </template>
+
+                <!-- Student form -->
+                <template x-if="studentForm">
+                    <form id="student-form" @submit.prevent="registerUser('student')" class="bg-gray-200 p-4 rounded shadow space-y-4 w-full">
+                        <div x-html="formHtml"></div>
+                        <input type="hidden" name="course_code" value="{{ course_code }}">
+                    </form>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+{% endblock %}

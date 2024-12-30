@@ -1,0 +1,6 @@
+# app/.gitignore
+.env
+__pycache__/
+venv/
+migrations/
+*.pyc

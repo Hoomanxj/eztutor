@@ -1,0 +1,152 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import field %}
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+
+<!-- Main assignment container-->
+<div x-data="assignmentPage('{{ current_user.role }}')" x-init="init()" class="space-y-4">
+    <!-- Tabs: course, student (only teacher)-->
+    <div class="flex justify-evenly items-center gap-4">
+        
+        <!-- Course select -->
+        <div>
+            <select id="course-select" x-model="courseId" 
+                    @change="role === 'student' ? fetchAssignments({ courseId: courseId }) : fetchStudents(courseId)"
+                    class="bg-pink-700 text-white mt-1 block w-full border border-pink-700 rounded-full shadow-sm p-2 focus:ring-pink-700 focus:border-pink-700 animate-pulse">
+                <option value="">Select a course</option>
+                <template x-for="course in courses" :key="course.id">
+                    <option :value="course.id" x-text="course.name"></option>
+                </template>
+            </select>
+        </div>
+
+        <!-- Student select (only teacher) -->
+        <template x-if="role === 'teacher' && courseId">
+            <div>
+                <select id="student-select" x-model="studentId" 
+                        @change="fetchAssignments({courseId: courseId, studentId: studentId})"
+                        class="bg-pink-700 text-white mt-1 block border border-pink-700 rounded-full shadow-sm p-2 focus:ring-pink-700 focus:border-pink-700 animate-pulse">
+                    <option value="">Select a Student</option>
+                    <template x-for="student in students" :key="student.id">
+                        <option :value="student.id" x-text="student.name"></option>
+                    </template>
+                </select>
+            </div>
+        </template>
+    </div>
+
+    <!-- Tabs: pending, submitted, scored -->
+    <template x-if="selectedCourse">
+        <div class="flex justify-evenly space-x-2">
+            <button
+            @click="showAssignments('pending')"
+            :class="activeTab === 'pending' ? 'bg-pink-700 text-white px-4 py-2 rounded-full animate-bounce' : 'bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl'">Pending</button>
+            <button
+            @click="showAssignments('submitted')"
+            :class="activeTab === 'submitted' ? 'bg-pink-700 text-white px-4 py-2 rounded-full animate-bounce' : 'bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl'">Submitted</button>
+            <button
+            @click="showAssignments('scored')"
+            :class="activeTab === 'scored' ? 'bg-pink-700 text-white px-4 py-2 rounded-full animate-bounce' : 'bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl'">Scored</button>
+            <template x-if="role === 'teacher'">
+                <button @click="openModal({ courseId: courseId, formType: 'create'})" class="bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl">Create</button>
+            </template>    
+        </div>
+    </template>
+
+    <!-- Assignments List -->
+    <div class="min-h-screen">
+        <template x-if="selectedStatus && selectedAssignments.length > 0">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-2">
+                <template x-for="assignment in selectedAssignments" :key="assignment.id">
+                    <!-- Card -->
+                    <div
+                        class="group relative w-72 h-20 bg-gray-200 border-4 rounded border-amber-600 p-4 overflow-hidden transition-all duration-1000 ease hover:w-96 flex items-center">
+                        
+                        <!-- Left (visible) content -->
+                        <div class="flex-shrink-0">
+                            <p class="text-lg font-semibold" x-text="assignment.category"></p>
+                        </div>
+            
+                        <!-- Right (hidden) content -->
+                        <div
+                            class="flex-grow ml-4 flex justify-between opacity-0 transition-opacity duration-300 ease group-hover:opacity-100 group-hover:delay-500">
+                            
+                            <!-- Hidden info -->
+                            <div>
+                                <div x-text="`Start: ${assignment.start_date}`"></div>
+                                <template x-if="selectedStatus === 'pending'">
+                                    <p x-text="`Created: ${assignment.pending_stamp}`"></p>
+                                </template>
+                                <template x-if="selectedStatus === 'submitted'">
+                                    <p x-text="`Submitted: ${assignment.submitted_stamp}`"></p>
+                                </template>
+                                <template x-if="selectedStatus === 'scored'">
+                                    <p x-text="`Scored: ${assignment.scored_stamp}`"></p>
+                                    <p x-text="`Score: ${assignment.score}`"></p>
+                                </template>
+                                <p x-text="`End: ${assignment.end_date}`"></p>
+                            </div>
+            
+                            <!-- Buttons: submit (student only), score (teacher only) -->
+                            <div class="flex items-center ml-4">
+                                <template x-if="selectedStatus === 'pending' && role === 'student'">
+                                    <button
+                                        @click="openModal({ formType:'submit', assignmentId: assignment.id })"
+                                        class="mt-2 px-3 py-1 bg-amber-600 text-white rounded hover:bg-pink-700"
+                                        x-text="`Submit`">
+                                    </button>
+                                </template>
+                                <template x-if="selectedStatus === 'submitted' && role === 'teacher'">
+                                    <button
+                                        @click="openModal({ courseId: courseId, formType: 'score', assignmentId: assignment.id, studentId: studentId })"
+                                        class="mt-2 px-3 py-1 bg-amber-600 text-white rounded hover:bg-pink-700"
+                                        x-text="`Score`">
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- If no assignment found -->
+        <template x-if="!selectedAssignments || selectedAssignments.length === 0">
+            <div class="flex justify-center items-center">
+                <h3 x-text="`There are no assignments to show!`" class="text-xl"></h3>
+            </div>
+        </template>
+    </div>
+
+    <!-- Create/Submit/Score Assignment Modal -->
+    <div 
+        x-show="isModalOpen" 
+        class="fixed inset-0 flex items-center justify-center bg-cyan-700 bg-opacity-50 z-50">
+
+        <!-- Modal Container -->
+        <div 
+            class="bg-gray-100 p-10 rounded shadow relative max-h-screen overflow-y-auto"
+            @click.away="isModalOpen = false">
+
+            <!-- Loading overlay (spinner) -->
+            <div x-show="isLoading"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+                style="display: none;">
+                <div class="text-white text-xl">Submitting...</div>
+            </div>
+            <!-- Modal content -->
+            <form @submit.prevent="submitForm" x-ref="assignmentForm" class="space-y-4">
+                <div x-html="formHtml"></div>
+            </form>
+            <!-- Close Button -->
+            <button 
+                @click="closeModal()" 
+                class="text-cyan-500 hover:underline absolute top-2 right-4">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/assignment.js') }}"></script>
+{% endblock %}

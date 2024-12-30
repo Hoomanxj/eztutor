@@ -1,0 +1,226 @@
+<!-- app/templates/layout.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}eztutor{% endblock %}</title>
+
+    <!-- Main layout of webapp extented to all pages -->
+    
+    <!-- Tailwind CSS - If switched to installing instead of using CDN -->
+    <!-- <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet"> -->
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    <!-- Field Validator -->
+    <script src="{{ url_for('static', filename='js/validator.js') }}" defer></script>
+
+    <!-- JSON messages -->
+    <script src="{{ url_for('static', filename='js/message.js') }}" ></script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-cyan-600 text-gray-800">
+    {% from "macros.html" import display_flashes %}
+    {{ display_flashes() }}
+    
+    <!-- Header section -->
+    <header class="bg-amber-600 text-white">
+        <div x-data="navbarAnimation()" class="relative w-full h-10 bg-amber-600 overflow-hidden">
+            <!-- Rolling ball -->
+            <div 
+                @mouseenter="menuVisible = true" 
+                @mouseleave="menuVisible = false" 
+                class="absolute top-4 left-4 h-6 w-6 animate-bounce bg-cyan-600 rounded-full shadow-lg
+                       transition-transform ease-linear"
+                :style="{
+                        transitionDuration: menuVisible ? '1500ms' : '800ms'
+                    }"
+                :class="menuVisible ? 'translate-x-[calc(100vw-4rem)]' : 'translate-x-0'">
+            </div>
+      
+            <!-- Navbar items -->
+            <nav 
+                @mouseenter="menuVisible = true" 
+                @mouseleave="menuVisible = false" 
+                class="absolute top-0 left-0 w-full h-full flex justify-evenly items-center"
+            >
+                {% if current_user.is_authenticated %}
+                <!-- Logout -->
+                <a href="{{ url_for('auth.log_user_out') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[50ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Logout
+                </a>
+                
+                <!-- Courses -->
+                <a href="{{ url_for('course.course_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[100ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Courses
+                </a>
+                
+                <!-- Assignments -->
+                <a href="{{ url_for('assignment.assignment_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[150ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Assignments
+                </a>
+                
+                <!-- Sessions -->
+                <a href="{{ url_for('session.session_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[200ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Sessions
+                </a>
+
+                <!-- Calendar -->
+                <a href="{{ url_for('calendar.calendar_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[250ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Calendar
+                </a>
+
+                <!-- Analytics -->
+                <a href="{{ url_for('analytics.analytics_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[300ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Analytics
+                </a>
+
+                <!-- Dashboard -->
+                <a href="{{ url_for('dashboard.dashboard_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[350ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'disabled delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Dashboard
+                </a>
+
+                {% else %}
+                <!-- Welcome -->
+                <a href="{{ url_for('welcome.welcome') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[50ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Welcome
+                </a>
+
+                <!-- Register -->
+                <a href="{{ url_for('auth.register_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[100ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Register
+                </a>
+
+                <!-- Login -->
+                <a href="{{ url_for('auth.login_home') }}"
+                   class="text-white text-lg hover:text-gray-300
+                          transition-all duration-300 ease-in-out
+                          opacity-0 pointer-events-none
+                          transform translate-y-4"
+                   :class="menuVisible 
+                      ? 'delay-[150ms] opacity-100 pointer-events-auto translate-y-0' 
+                      : 'delay-[0ms] opacity-0 pointer-events-none translate-y-4'">
+                    Login
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    
+    <main class="p-4 ">
+        <div class="container rounded bg-cyan-500">
+            <!-- A simple “toast” area that displays notifications from the store -->
+<div x-data id="notifier-container">
+    <template x-for="(msg, index) in $store.notifier.messages" :key="index">
+      <div 
+        class="p-2 m-2 rounded shadow"
+        :class="{
+          'bg-green-200 border-l-4 border-green-600': msg.type === 'success',
+          'bg-red-200 border-l-4 border-red-600': msg.type === 'error',
+          'bg-yellow-200 border-l-4 border-yellow-600': msg.type === 'warning',
+          'bg-blue-200 border-l-4 border-blue-600': msg.type === 'info',
+        }"
+      >
+        <p x-text="msg.text"></p>
+        <button 
+            class="text-sm text-blue-700 underline mt-1"
+            @click="$store.notifier.remove(index)">
+            Close
+        </button>
+      </div>
+    </template>
+</div>
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-700 text-white p-4 text-center">
+        <p>&copy; 2025 EZTutor. All Rights Reserved.</p>
+    </footer>
+    <script>
+        function navbarAnimation() {
+            return {
+                menuVisible: false
+            };
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/course.js') }}"></script>
+</body>
+</html>

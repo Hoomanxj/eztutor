@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOS & Tailwind CSS Animation Showcase</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+    <style>
+        /* Smooth scrolling */
+        body {
+            scroll-behavior: smooth;
+        }
+
+        /* Parallax effect section */
+        #parallax {
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans leading-normal">
+
+    <!-- Container Wrapper -->
+    <div class="container bg-cyan-600  mx-auto px-4">
+
+        <!-- Spacer to enable scrolling -->
+
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-[50vh] flex flex-col justify-center items-center rounded-lg bg-gradient-to-r from-amber-600 to-cyan-500">
+            <div data-aos="zoom-out" class="text-5xl font-bold mb-4">
+                Welcome to EZtutor.
+            </div>
+            <div data-aos="zoom-out-up" class="text-2xl">
+                Where teaching is made EZ!
+            </div>
+            <div class="h-20"></div>
+            <div class="flex justify-evenly gap-24 ">
+                <div data-aos="fade-right">
+                    <div class="text-4xl transition ease-in-out text-pink-800 hover:scale-125  duration-700">
+                        <a href="{{ url_for('auth.register_home') }}">Register</a>
+                    </div>
+                </div>
+                <div  data-aos="fade-left">
+                    <div class="text-4xl transition ease-in-out text-pink-800 hover:scale-125 duration-700">
+                        <a href="{{ url_for('auth.login_home') }}">Login</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacer -->
+        <div class="h-[25vh]"></div>
+
+        <!-- Intro -->
+        <section id="intro" class="min-h-[50vh] rounded-lg bg-gray-200 p-12">
+            <p data-aos="fade-down" class="text-2xl text-amber-600 font-semibold text-center mb-12">
+                Our goal is to provide language tutors and their students with tools <br> necessary to handle their class arrangment needs.
+            </p>
+            <p data-aos="fade-up" class="text-2xl text-pink-700 font-extrabold text-center mb-12">
+                But what can you find here?
+            </p>
+            <p data-aos="fade-up" data-aos-delay="1000" class="text-4xl text-pink-700 font-extrabold text-center mb-12">
+                Let's find out!
+            </p>
+        </section>
+
+        <!-- Spacer -->
+        <div class="h-[25vh]"></div>
+
+        <!-- Features -->
+        <section id="features" class="min-h-screen bg-cyan-600 p-12">
+            <p data-aos="fade-down" class="text-4xl text-amber-600 font-bold text-center mb-12">
+                Features
+            </p>
+
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- Courses -->
+                <div data-aos="fade-right" data-aos-offset="200" class="flex flex-col justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-2 text-pink-700">Courses</h3>
+                    <div class="text-gray-600 text-center font-semibold">
+                        Create and view courses
+                    </div>
+                    <div class="text-gray-600 text-left ml-4">
+                        <strong>Teachers:</strong> Use forms to create your courses with ease.<br>
+                        <strong>Everyone:</strong> See your Ongoing or Concluded courses.
+                    </div>
+                </div>
+
+                <!-- Column spacer -->
+                <div></div>
+                <!-- Column spacer -->
+                <div></div>
+
+                <!-- Assignments -->
+                <div data-aos="fade-left" data-aos-offset="200" class="flex flex-col justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-2 text-pink-700">Assignments</h3>
+                    <div class="text-gray-600 text-center font-semibold">
+                        Create, submit, score... You name it
+                    </div>
+                    <div class="text-gray-600 text-left ml-4">
+                        <strong>Teachers:</strong> Create and score assignments.<br>
+                        <strong>students:</strong> Submit your assignement with only a few button presses.
+                    </div>
+                </div>
+
+                <!-- Sessions -->
+                <div data-aos="fade-right" data-aos-offset="200" class="flex flex-col justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-2 text-pink-700">Sessions</h3>
+                    <div class="text-gray-600 text-center font-semibold">
+                        all sessions and their state; in one glance
+                    </div>
+                    <div class="text-gray-600 text-left ml-4">
+                        <strong>Teachers:</strong> Update session information<br>
+                        <strong>students:</strong> See teacher notes on sessions.<br>
+                    </div>
+                </div>
+
+                <!-- Column spacer -->
+                <div></div>
+                <!-- Column spacer -->
+                <div></div>
+                
+                <!-- Calendar -->
+                <div data-aos="fade-left" data-aos-offset="200" class="flex flex-col justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-2 text-pink-700">Calendar</h3>
+                    <div class="text-gray-600 text-center font-semibold">
+                        Not only your classes, but also your custom-made tasks
+                    </div>
+                    <div class="text-gray-600 text-left ml-4">
+                        <strong>Teachers:</strong> Check your schedule, add personal tasks.<br>
+                        <strong>students:</strong> Check when your class schedule look like and add tasks.
+                    </div>
+                </div>
+
+                <!-- Analytics -->
+                <div data-aos="fade-right" data-aos-offset="200" class="flex flex-col justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-2 text-pink-700">Analytics</h3>
+                    <div class="text-gray-600 text-center font-semibold">
+                        See the progress with intuitive visuals
+                    </div>
+                    <div class="text-gray-600 text-left ml-4">
+                        <strong>Teachers:</strong> See how your students are doing in detail.<br>
+                        <strong>Everyone:</strong> Checkout how you are performing.
+                    </div>
+                </div>
+
+                <!-- Column spacer -->
+                <div></div>
+                <!-- Column spacer -->
+                <div></div>
+
+                <!-- Dashboard -->
+                <div data-aos="fade-left" data-aos-offset="200" class="flex flex-col justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-2 text-pink-700">Dashboard</h3>
+                    <div class="text-gray-600 text-center font-semibold">
+                        Things made even EZ'er
+                    </div>
+                    <div class="text-gray-600 text-left ml-4">
+                        <strong>Everyone:</strong> Intuitive view of your courses, daily schedule, upcoming session and performance in one place.
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Spacer -->
+        <div class="h-[50vh]"></div>
+        
+        <!-- Links -->
+        <section id="links" class="min-h-screen flex flex-col justify-center items-center rounded-lg bg-gradient-to-r from-amber-600 to-cyan-500">
+            <div data-aos="zoom-out">
+                <p class="text-7xl text-gray-700">Ready to join us?</p>
+            </div>
+            <div class="h-20"></div>
+            <div class="flex justify-evenly gap-24 ">
+                <div data-aos="fade-right">
+                    <div class="text-4xl transition ease-in-out text-pink-800 hover:scale-125  duration-700">
+                        <a href="{{ url_for('auth.register_home') }}">Register</a>
+                    </div>
+                </div>
+                <div  data-aos="fade-left">
+                    <div class="text-4xl transition ease-in-out text-pink-800 hover:scale-125 duration-700">
+                        <a href="{{ url_for('auth.login_home') }}">Login</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <!-- Initialize AOS -->
+    <script>
+        AOS.init({
+            duration: 1000, // Animation duration in milliseconds
+            once: false    // Whether animation should happen only once while scrolling down
+        });
+    </script>
+</body>
+</html>

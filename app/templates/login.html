@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import field %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<!-- Main login container -->
+<div x-data="login()" x-init="init()" class="space-y-4">
+    <div class="flex items-center justify-center">
+
+        <!-- Login form -->
+        <form @submit.prevent="logUserIn()" class="space-y-4 bg-gray-200 p-4 border-4 border-amber-600 rounded shadow w-full max-w-sm">
+            <div x-html="formHtml"></div>
+            <input type="hidden" name="course_code" value="{{ course_code }}">
+        </form>
+    </div>
+    <div class="flex items-center justify-center">
+
+        <!-- Register page director -->
+        <div class="text-sm space-x-2">
+            <p class="inline">Don't have an account?</p>
+            <a href="{{ url_for('auth.register_home', course_code=course_code) }}" class="text-amber-800 hover:underline">Register</a>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

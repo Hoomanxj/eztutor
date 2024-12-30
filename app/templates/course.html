@@ -1,0 +1,162 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import field %}
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+
+<!-- Main course container -->
+<div x-data="course('{{ current_user.role }}')" x-init="init()" class="space-y-4">
+    <div class="grid grid-cols-1 gap-4">
+
+        <!-- Tabs: create (only teacher), view -->
+        <div class="flex justify-evenly items-center mt-3">
+            <template x-if="role === 'teacher'">
+                <button 
+                    @click="fetchCourseForm()" 
+                    :class="viewOn === false ? 'bg-pink-700 text-white px-4 py-2 rounded-full animate-pulse' : 'bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl'"
+                >
+                    Create Course
+                </button>
+            </template>
+                <button 
+                    @click="viewCourses('ongoing')" 
+                    :class="viewOn === true ? 'bg-pink-700 text-white px-4 py-2 rounded-full animate-pulse' : 'bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl'"
+                >
+                    View Courses
+                </button>
+        </div>
+        
+        <!-- Subtabs: ongoing, concluded -->
+        <div class="flex justify-evenly items-center mt-3">
+            <template x-if="viewOn">
+                <div class="space-x-2 mb-4">
+                    <button 
+                        @click="viewCourses('ongoing')" 
+                        :class="courseStatus === 'ongoing' ? 'bg-pink-700 text-white px-4 py-2 rounded-full animate-bounce' : 'bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl'"
+                    >
+                        Ongoing
+                    </button>
+                    <button 
+                        @click="viewCourses('concluded')" 
+                        :class="courseStatus === 'concluded' ? 'bg-pink-700 text-white px-4 py-2 rounded-full animate-bounce' : 'bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:shadow-2xl'"
+                    >
+                        Concluded
+                    </button>
+                </div>
+            </template>
+        </div>
+         
+        
+        <div class="min-h-screen">
+            <!-- If there are no courses -->
+            <template x-if="(!allCourses || allCourses.length === 0) && viewOn === true">
+                <div class="flex justify-center items-center">
+                    <h3 x-text="`There are no courses to show!`" class="text-xl"></h3>
+                </div>
+            </template>
+
+            <!-- Course cards -->
+            <template x-if="allCourses && allCourses.length > 0">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <template x-if="viewOn">
+                        <template x-for="course in courses" :key="course.id">
+                            <div 
+                                class="grid grid-cols-1 md:grid-cols-2 shadow p-4 border-4 rounded border-amber-600 bg-gray-200 mb-4 transition transform hover:shadow-lg hover:scale-105 duration-500"
+                                @mouseenter="course.hover = true"
+                                @mouseleave="course.hover = false"
+                            >
+                                
+                                <h3 class="justify-self-start self-center font-bold text-lg" x-text="course.name"></h3>
+                                <template x-if="role === 'teacher' && courseStatus === 'ongoing'">
+                                    <div class="justify-self-end self-top">
+                                        <button 
+                                            @click="inviteForm(course.id)" 
+                                            class="bg-gradient-to-r bg-amber-600 text-white px-4 py-2 rounded-full shadow-lg transition transform duration-500 hover:scale-110 hover:bg-pink-700 hover:shadow-2xl"
+                                        >
+                                            Add Student
+                                        </button>
+                                    </div>
+                                </template>
+                                <div class="col-span-2">
+                                    <div
+                                        x-show="course.hover"
+                                        x-cloak
+                                        class="grid grid-cols-1 lg:grid-cols-2 text-sm mt-2"
+                                        x-transition:enter="transition ease-out duration-300"
+                                        x-transition:enter-start="opacity-0 transform scale-95"
+                                        x-transition:enter-end="opacity-100 transform scale-100"
+                                        x-transition:leave="transition ease-in duration-200"
+                                        x-transition:leave-start="opacity-100 transform scale-100"
+                                        x-transition:leave-end="opacity-0 transform scale-95"
+                                    >
+                                        <p x-text="`Type: ${course.type} | Format: ${course.format}`"></p>
+                                        <p x-text="`Weekdays: ${course.weekdays}`"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Course create form -->
+            <div>
+                <!-- Loading overlay (spinner) -->
+                <div x-show="isLoadingCreate"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+                    style="display: none;">
+                    <div class="text-white text-xl">Creating the course...</div>
+                </div>
+                
+                <!-- Course creation form (only teacher)-->
+                <template x-if="formHtml">
+                    <form @submit.prevent="submitForm" class="bg-gray-200 p-4 rounded shadow space-y-4 w-full">
+                        <div x-html="formHtml"></div>
+                    </form>
+                </template>
+            </div>
+        </div>
+
+
+    
+        <!-- Invitation modal -->
+        <div
+            x-show="invitationModal"
+            x-cloak
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-90"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-90"
+            class="fixed inset-0 flex items-center justify-center
+            bg-gray-700 bg-opacity-50 z-50"
+        >
+            <div 
+                class="bg-gray-200 p-6 rounded shadow relative transform transition-all"
+                @click.away="invitationModal = false"
+            >
+                <!-- Loading overlay (spinner) -->
+                <div x-show="isLoadingCreate"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+                    style="display: none;">
+                    <div class="text-white text-xl">Sending invitation...</div>
+                </div>
+                <h3 class="text-lg font-bold mb-4">Invitation</h3>
+                <form @submit.prevent="sendInvite" class="space-y-4">
+                    <div x-html="inviteHtml"></div>
+                </form>
+                <button 
+                    @click="invitationModal = false" 
+                    class="absolute top-2 right-2 text-cyan-500 hover:underline transition transform hover:scale-110"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/course.js') }}"></script>
+{% endblock %}
