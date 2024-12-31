@@ -1,0 +1,7 @@
+{
+    "flask": {
+      "mirror": true,
+      "pythonVersion": "3.12",
+      "timezone": "America/Los_Angeles"
+    }
+  }
