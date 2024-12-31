@@ -1,4 +1,4 @@
-# EZtutur
+# EZtutor
 
 **EZtutor** is a webapp project designed to help language tutors and their students to manage their classes with ease.
 
