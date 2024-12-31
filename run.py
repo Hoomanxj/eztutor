@@ -17,4 +17,5 @@ def internal_error(error):
     return "An error occurred on the server. Please try again later.", 500
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
