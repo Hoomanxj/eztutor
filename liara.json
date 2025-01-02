@@ -1,7 +1,5 @@
 {
   "app": "eztutor",
-  "platform": "python",
-  "port": 5000,
-  "pythonVersion": "3.12.6",
-  "timezone": "Asia/Tehran"
+  "platform": "docker",
+  "port": 5000
 }
