@@ -1,5 +1,5 @@
 """
-app\course\routes.py
+app/course/routes.py
 
 This module handle course view and creation.
 """

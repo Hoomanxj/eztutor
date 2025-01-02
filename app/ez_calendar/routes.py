@@ -1,5 +1,5 @@
 """
-app\ez_calendar\routes.py
+app/ez_calendar/routes.py
 
 This module handles calendar routes.
 """

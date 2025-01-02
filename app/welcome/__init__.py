@@ -1,5 +1,5 @@
 """
-app\welcome\__init__.py
+app/welcome/__init__.py
 
 This module handles welcome init for the blueprint.
 """

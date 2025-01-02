@@ -1,6 +1,6 @@
 
 """
-app\welcome\routes.py
+app/welcome/routes.py
 
 This module handle welcome page routes
 """

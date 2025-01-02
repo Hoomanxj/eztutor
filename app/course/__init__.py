@@ -1,5 +1,5 @@
 """
-app\course\__init__.py
+app/course/__init__.py
 
 This module handles analytical init for the blueprint.
 """
