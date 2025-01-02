@@ -1,7 +1,7 @@
 {
-    "flask": {
-      "mirror": true,
-      "pythonVersion": "3.12",
-      "timezone": "America/Los_Angeles"
-    }
-  }
+  "app": "eztutor",
+  "platform": "python",
+  "port": 5000,
+  "pythonVersion": "3.12.6",
+  "timezone": "Asia/Tehran"
+}
