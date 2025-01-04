@@ -1,0 +1,37 @@
+buy:
+# get the symbol from user
+# make sure it is not empty
+# make sure it is valid and can be found
+# get the shares amount from user
+# make sure it is not empty
+# make sure it is valid and none-zero or negative
+# find the unit price using lookup()
+# make sure it can be found
+# calculate the total price
+# make sure if user has enough money to buy
+# deduct the total value from cash
+# update the users.cash
+# update the logs
+# update the portfolio
+
+sell:
+# get the smybol
+    # make sure it is not empty
+    # make sure it is correct (lookup)
+# get the shares amount
+    # make sure it is not empty
+    # make sure it is not negative or zero
+    # make sure user has that many shares (check portfolio)
+# calculate the total sell value
+# update the database
+    # deduct the share amount from portfolio
+    # calculate the new cash value
+        # update cash in users
+    # add the transaction to log
+
+portfolio aka index:
+# get all shares info from portfolio
+    # use a loop and add them to a list
+# get the cash info from users
+# calculate the capital (cash + value of all stocks)
+

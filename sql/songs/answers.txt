@@ -1,0 +1,21 @@
+after running the following query we can get the avg for each factor (energy, danceability and valence):
+SELECT avg(energy), avg(danceability), avg(valence) FROM songs;
+result:
+avg energy       = 0.066
+avg danceability = 0.072
+avg valence      = 0.49
+
+Looking at the values we might conclude that users mostly prefered songs with minimal energt value and danceability.
+On the other hand, the songs have a partial neutrality in happy/sad scale (valence) with the value of 0.49.
+This could mean that users prefer songs that are relaxing in nature and don't pay much attention to the content or lyrics
+to see whether it is a happy or sad song.
+
+Possible imporvement:
+
+1- Adding the speechiness can shine some light on the fact that when do users listen to the songs to have a better understanding
+    of their mood. For instance, the avg speechiness is 0.53 where it shows the users prefer a balanced combination of words in song
+    and music. Now in a scenario that this value is lower, it might suggest that the users are listening to more instrumental-based
+    tracks while they might be engaged in focuced-based tasks.
+2- Adding the loudness in combination with the level of energy and danceability can show the intensity of feelings (sadness/happiness)
+    while the users are listening to songs. Here, the avg value is -5.68 which shows a high level of loudness that can be interpreted
+    as intese levels of emotions while listening to songs.

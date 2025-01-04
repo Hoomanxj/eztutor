@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Stock Quote
+{% endblock %}
+
+{% block main %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm p-4" style="max-width: 500px; width: 100%;">
+        <h2 class="text-center mb-4">Stock Quote Details</h2>
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Price</th>
+                    <th>Symbol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ infos.name }}</td>
+                    <td>${{ "{:,.2f}".format(infos.price | round(2)) }}</td>
+                    <td>{{ infos.symbol | upper }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

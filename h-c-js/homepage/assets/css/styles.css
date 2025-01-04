@@ -1,0 +1,77 @@
+.container-fluid > * {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.hero-banner {
+    background-color: #2a50b8;
+    padding: 10px 0;
+    position: relative;
+}
+
+.hero-text {
+    color: white;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    margin-bottom: 5px; /* Create spacing from the image */
+}
+
+.hero-image {
+    width: 90%;
+    height: auto;
+    max-width: 100%;
+    max-height: 500px; /* Set a sensible max height */
+}
+
+.nav-pills {
+    background-color: #FFEB3B;
+}
+
+.nav-pills .nav-link.active {
+    background-color: transparent !important;
+    color: #000;
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.6); /* Black background with 60% opacity */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.carousel-caption h5,
+.carousel-caption p {
+    color: white;
+}
+
+footer .nav-link:hover {
+    color: #FFEB3B;
+    transition: color 0.2s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .hero-text {
+        font-size: 1.5rem;
+    }
+    .carousel-caption h5 {
+        font-size: 1.25rem;
+    }
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+ }
+ .card {
+    background-color: #8BC34A;
+ }
+
+.justified-text {
+    text-align: justify;
+}
+
+body {
+    background-color: #2a50b8;
+}
+
+.legends {
+    gap: 10px;
+}

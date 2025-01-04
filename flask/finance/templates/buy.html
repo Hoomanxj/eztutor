@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Buy
+{% endblock %}
+
+{% block main %}
+<div class="container d-flex justify-content-center my-5">
+    <div class="card p-4 shadow-sm" style="width: 22rem;">
+        <h3 class="card-title text-center mb-4">Buy Stock</h3>
+        <form action="/buy" method="post">
+            <div class="mb-3">
+                <label for="symbol" class="form-label">Stock Symbol</label>
+                <input id="symbol" autocomplete="off" autofocus class="form-control" name="symbol" placeholder="e.g., AAPL" type="text">
+            </div>
+            <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <input id="amount" autocomplete="off" class="form-control" name="shares" placeholder="e.g., 10" type="number" min="1">
+            </div>
+            <button class="btn btn-primary w-100 mt-3" type="submit">Buy</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

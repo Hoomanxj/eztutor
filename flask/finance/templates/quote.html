@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Get Stock Quote
+{% endblock %}
+
+{% block main %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
+        <h2 class="text-center mb-4">Get a Stock Quote</h2>
+        <p class="text-center text-muted">Enter the stock symbol to view its current price.</p>
+        <form action="/quote" method="post">
+            <div class="mb-3">
+                <label for="stock-name" class="form-label">Stock Symbol</label>
+                <input autocomplete="off" autofocus class="form-control" id="stock-name" name="symbol" placeholder="e.g., AAPL" type="text">
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Search Quote</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

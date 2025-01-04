@@ -1,0 +1,14 @@
+This is a website promoting monkies and their kind!
+HTML tags:
+    Doctype / html / head / meta / link / script / title
+    main / nav / ul / li / a / section / div / h4 / img
+    button / h5 / p / b / br / small / h2 / span / footer
+
+CSS selectors:
+    containter-fluid / hero-banner / hero-text / hero-image
+    nav-pills and nav-link.active / carousel-caption and
+    carousel-caption h5, p / footer / @media / card
+    justified-text / body / legends
+
+Bootstrap: Used mainly for architecture / carousel / text cards
+JavaScript: Used to check form entry, submit and print a success massage

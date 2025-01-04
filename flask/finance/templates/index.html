@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <h3 class="text-center mb-4">Account Summary</h3>
+    <table class="table table-bordered shadow-sm mb-5">
+        <thead class="table-dark">
+            <tr>
+                <th>Cash Balance</th>
+                <th>Capital</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{cash | usd}}</td>
+                <td>{{capital | usd}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 class="text-center mb-4">Portfolio</h3>
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Stocks Owned</th>
+                <th>Number of Shares</th>
+                <th>Current Price</th>
+                <th>Total Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock["symbol"]|upper }}</td>
+                    <td>{{ stock["shares"] }}</td>
+                    <td>{{stock["price"] | usd}}</td>
+                    <td>{{stock["value"] | usd}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="/" method="POST" class="text-center mt-5">
+        <h3 class="pt-4 pb-3">Deposit Cash</h3>
+        <input autocomplete="off" class="form-control mx-auto w-auto" name="deposit" placeholder="Deposit amount" type="text">
+        <button class="btn btn-primary mt-4" type="submit">Deposit</button>
+    </form>
+</div>
+{% endblock %}
