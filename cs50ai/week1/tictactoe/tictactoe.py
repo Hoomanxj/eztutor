@@ -30,7 +30,6 @@ def player(board):
     return X if x_count <= o_count else O
 
 
-
 def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
@@ -40,8 +39,7 @@ def actions(board):
     for i, row in enumerate(board):
         for j, column in enumerate(row):
             if column == EMPTY:
-                actions.add((i,j))
-    
+                actions.add((i, j))
 
     return actions
 
@@ -53,7 +51,8 @@ def result(board, action):
     i, j = action  # Unpack the action
 
     # Validate the action
-    if not (0 <= i < len(board)) or not (0 <= j < len(board[i])):  # Check if indices are out of bounds
+    # Check if indices are out of bounds
+    if not (0 <= i < len(board)) or not (0 <= j < len(board[i])):
         raise Exception("Invalid move: Out-of-bounds action.")
     if board[i][j] != EMPTY:  # Check if the cell is already occupied
         raise Exception("Invalid move: Cell is already occupied.")
@@ -70,7 +69,6 @@ def result(board, action):
     return new_board
 
 
-
 def winner(board):
     """
     Returns the winner of the game, if there is one.
@@ -81,29 +79,29 @@ def winner(board):
     for i in range(len(b)):
         # Check the digonals
         if (
-            i == 0 # This makes sure we are on the diagonals
+            i == 0  # This makes sure we are on the diagonals
             and
             (b[i][i] == b[i+1][i+1] == b[i+2][i+2]
-            or
-            b[i][i+2] == b[i+1][i+1] == b[i+2][i])):
+             or
+             b[i][i+2] == b[i+1][i+1] == b[i+2][i])):
             if b[i+1][i+1] == X:
                 winner = X
                 break
             elif b[i+1][i+1] == O:
                 winner = O
                 break
-            
+
         # Check the rows and columns if it was not on diagonals
-        if ( # Check for X
+        if (  # Check for X
             b[i][0] == b[i][1] == b[i][2] == X
             or
-            b[0][i] == b[1][i] == b[2][i] == X):
+                b[0][i] == b[1][i] == b[2][i] == X):
             winner = X
             break
-        elif ( # Check for O
+        elif (  # Check for O
             b[i][0] == b[i][1] == b[i][2] == O
             or
-            b[0][i] == b[1][i] == b[2][i] == O):
+                b[0][i] == b[1][i] == b[2][i] == O):
             winner = O
             break
     return winner
@@ -114,14 +112,14 @@ def terminal(board):
     Returns True if game is over, False otherwise.
     """
     # If there was a winner
-    #  
+    #
     if winner(board) != None:
         return True
-    
+
     # If there was no winner but there are possible actions left
     if not actions(board):
         return True
-    
+
     # If none of the above is True
     return False
 
@@ -134,9 +132,10 @@ def utility(board):
     if win == X:
         return 1
     elif win == O:
-        return  -1
+        return -1
     else:
         return 0
+
 
 def minimax(board, return_action=True):
     """
@@ -170,5 +169,3 @@ def minimax(board, return_action=True):
 
     # Return the best action (at top level) or the utility value (during recursion)
     return best_action if return_action else best_value
-
-
