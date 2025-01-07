@@ -18,7 +18,7 @@ knowledge0 = And(
     Implication(AKnave, Not(And(AKnight, AKnave)))
 )
 
-    
+
 
 # Puzzle 1
 # A says "We are both knaves."
@@ -60,8 +60,8 @@ knowledge3 = And(
     Not(And(BKnight, BKnave)),
     Or(CKnight, CKnave),
     Not(And(CKnight, CKnave)),
-    Implication(AKnight, And(AKnight, AKnave)),
-    Implication(AKnave, Not(And(AKnight, AKnave))),
+    Implication(AKnight, Or(AKnight, AKnave)),
+    Implication(AKnave, Not(Or(AKnight, AKnave))),
     Biconditional(AKnight, BKnave),
     Biconditional(BKnight, CKnave),
     Biconditional(CKnight, AKnight)
