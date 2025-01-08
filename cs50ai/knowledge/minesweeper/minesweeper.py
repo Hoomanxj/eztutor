@@ -198,7 +198,7 @@ class MinesweeperAI():
         # Construct a new sentence:
         #   We do NOT remove known mines from `neighbors`. Instead, we keep them
         #   so that this sentence accurately represents "count" mines among these neighbors.
-        #   Then we immediately use `mark_mine` to update that sentence. 
+        #   Then we immediately use `mark_mine` to update that sentence.
         new_sentence = Sentence(neighbors, count)
 
         # 4. "Mark" any known mines in the new sentence so that the sentence is consistent
