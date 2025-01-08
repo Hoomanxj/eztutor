@@ -195,12 +195,13 @@ class MinesweeperAI():
         neighbors -= self.safes
         neighbors -= self.mines
         new_sentence = Sentence(neighbors, count)
-        self.knowledge.append(new_sentence)
+        if new_sentence.cells and new_sentence not in self.knowledge:
+            self.knowledge.append(new_sentence)
 
         # 4. Update knowledge with safes and mines
         safes_to_mark = set()
         mines_to_mark = set()
-        for sentence in self.knowledge:
+        for sentence in self.knowledge[:]:
             safes_to_mark.update(sentence.known_safes())
             mines_to_mark.update(sentence.known_mines())
         for safe in safes_to_mark:
@@ -208,18 +209,19 @@ class MinesweeperAI():
         for mine in mines_to_mark:
             self.mark_mine(mine)
 
-        # 5. Infer new sentences
+        # 5. Combine sentences to infer new knowledge
         new_knowledge = []
-        for sentence1 in self.knowledge:
-            for sentence2 in self.knowledge:
+        for sentence1 in self.knowledge[:]:
+            for sentence2 in self.knowledge[:]:
                 if sentence1 != sentence2 and sentence1.cells.issubset(sentence2.cells):
                     inferred = Sentence(
                         sentence2.cells - sentence1.cells,
                         sentence2.count - sentence1.count
                     )
-                    if inferred not in self.knowledge and inferred not in new_knowledge:
+                    if inferred.cells and inferred not in self.knowledge and inferred not in new_knowledge:
                         new_knowledge.append(inferred)
         self.knowledge.extend(new_knowledge)
+
 
 
 
