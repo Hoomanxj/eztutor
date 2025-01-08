@@ -214,13 +214,24 @@ class MinesweeperAI():
         for sentence1 in self.knowledge[:]:
             for sentence2 in self.knowledge[:]:
                 if sentence1 != sentence2 and sentence1.cells.issubset(sentence2.cells):
-                    inferred = Sentence(
-                        sentence2.cells - sentence1.cells,
-                        sentence2.count - sentence1.count
-                    )
+                    inferred_cells = sentence2.cells - sentence1.cells
+                    inferred_count = sentence2.count - sentence1.count
+                    inferred = Sentence(inferred_cells, inferred_count)
                     if inferred.cells and inferred not in self.knowledge and inferred not in new_knowledge:
                         new_knowledge.append(inferred)
         self.knowledge.extend(new_knowledge)
+
+        # 6. Revisit sentences to deduce new safes and mines
+        safes_to_mark.clear()
+        mines_to_mark.clear()
+        for sentence in self.knowledge[:]:
+            safes_to_mark.update(sentence.known_safes())
+            mines_to_mark.update(sentence.known_mines())
+        for safe in safes_to_mark:
+            self.mark_safe(safe)
+        for mine in mines_to_mark:
+            self.mark_mine(mine)
+
 
     def make_safe_move(self):
         """
