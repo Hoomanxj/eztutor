@@ -109,7 +109,6 @@ class Sentence():
             return self.cells
         return set()
 
-
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
@@ -193,8 +192,8 @@ class MinesweeperAI():
                 if (i, j) != cell and 0 <= i < self.height and 0 <= j < self.width:
                     neighbors.add((i, j))
         neighbors -= self.safes
-        neighbors -= self.mines
-        new_sentence = Sentence(neighbors, count)
+        neighbors -= self.mines  # Exclude known mines
+        new_sentence = Sentence(neighbors, count - len(neighbors & self.mines))  # Adjust count
         if new_sentence.cells and new_sentence not in self.knowledge:
             self.knowledge.append(new_sentence)
 
@@ -204,6 +203,7 @@ class MinesweeperAI():
         for sentence in self.knowledge[:]:
             safes_to_mark.update(sentence.known_safes())
             mines_to_mark.update(sentence.known_mines())
+
         for safe in safes_to_mark:
             self.mark_safe(safe)
         for mine in mines_to_mark:
@@ -222,10 +222,6 @@ class MinesweeperAI():
                         new_knowledge.append(inferred)
         self.knowledge.extend(new_knowledge)
 
-
-
-
-
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
@@ -235,7 +231,6 @@ class MinesweeperAI():
                 return cell
         return None
 
-
     def make_random_move(self):
         """
         Returns a move to make on the Minesweeper board.
@@ -243,4 +238,3 @@ class MinesweeperAI():
         all_cells = {(i, j) for i in range(self.height) for j in range(self.width)}
         valid_moves = list(all_cells - self.moves_made - self.mines)
         return random.choice(valid_moves) if valid_moves else None
-
