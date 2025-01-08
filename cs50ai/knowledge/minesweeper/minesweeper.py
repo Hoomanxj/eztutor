@@ -193,7 +193,8 @@ class MinesweeperAI():
                     neighbors.add((i, j))
         neighbors -= self.safes
         neighbors -= self.mines  # Exclude known mines
-        new_sentence = Sentence(neighbors, count - len(neighbors & self.mines))  # Adjust count
+        adjusted_count = count - len(neighbors & self.mines)
+        new_sentence = Sentence(neighbors, adjusted_count)
         if new_sentence.cells and new_sentence not in self.knowledge:
             self.knowledge.append(new_sentence)
 
@@ -209,17 +210,20 @@ class MinesweeperAI():
         for mine in mines_to_mark:
             self.mark_mine(mine)
 
-        # 5. Combine sentences to infer new knowledge
-        new_knowledge = []
-        for sentence1 in self.knowledge[:]:
-            for sentence2 in self.knowledge[:]:
-                if sentence1 != sentence2 and sentence1.cells.issubset(sentence2.cells):
-                    inferred_cells = sentence2.cells - sentence1.cells
-                    inferred_count = sentence2.count - sentence1.count
-                    inferred = Sentence(inferred_cells, inferred_count)
-                    if inferred.cells and inferred not in self.knowledge and inferred not in new_knowledge:
-                        new_knowledge.append(inferred)
-        self.knowledge.extend(new_knowledge)
+        # 5. Combine sentences iteratively to infer new knowledge
+        while True:
+            additions = []
+            for sentence1 in self.knowledge:
+                for sentence2 in self.knowledge:
+                    if sentence1 != sentence2 and sentence1.cells.issubset(sentence2.cells):
+                        inferred_cells = sentence2.cells - sentence1.cells
+                        inferred_count = sentence2.count - sentence1.count
+                        inferred = Sentence(inferred_cells, inferred_count)
+                        if inferred.cells and inferred not in self.knowledge and inferred not in additions:
+                            additions.append(inferred)
+            if not additions:
+                break
+            self.knowledge.extend(additions)
 
         # 6. Revisit sentences to deduce new safes and mines
         safes_to_mark.clear()
@@ -231,6 +235,7 @@ class MinesweeperAI():
             self.mark_safe(safe)
         for mine in mines_to_mark:
             self.mark_mine(mine)
+
 
 
     def make_safe_move(self):
