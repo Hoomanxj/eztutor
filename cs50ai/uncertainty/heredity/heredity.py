@@ -139,7 +139,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    joint_prob = 1 # start value
+    joint_prob = 1  # start value
     gene_count = 0
     for person in people:
         father = people[person]["father"]
@@ -159,9 +159,10 @@ def joint_probability(people, one_gene, two_genes, have_trait):
                     not_pass = 1 - PROBS["mutation"]
                 parents_dict[parent] = {"pass_gene": pass_gene, "not_pass": not_pass}
             gene0 = parents_dict[father]["not_pass"] * parents_dict[mother]["not_pass"]
-            gene1 = parents_dict[father]["not_pass"] * parents_dict[mother]["pass_gene"] + parents_dict[father]["pass_gene"] * parents_dict[mother]["not_pass"]
-            gene2 = parents_dict[father]["pass_gene"] * parents_dict[mother]["pass_gene"] 
-            
+            gene1 = parents_dict[father]["not_pass"] * parents_dict[mother]["pass_gene"] + \
+                parents_dict[father]["pass_gene"] * parents_dict[mother]["not_pass"]
+            gene2 = parents_dict[father]["pass_gene"] * parents_dict[mother]["pass_gene"]
+
         elif (not father and not mother):
             gene0 = PROBS["gene"][0]
             gene1 = PROBS["gene"][1]
@@ -182,7 +183,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             trait_prob = PROBS["trait"][gene_count][False]
         probability = gene_prob * trait_prob
         joint_prob *= probability
-        
+
     return joint_prob
 
 
@@ -215,7 +216,7 @@ def normalize(probabilities):
         total_genes = sum(probabilities[person]["gene"].values())
         for gene_count in probabilities[person]["gene"]:
             probabilities[person]["gene"][gene_count] /= total_genes
-        
+
         # Normalize trait probabilities
         total_traits = sum(probabilities[person]["trait"].values())
         for trait in probabilities[person]["trait"]:
