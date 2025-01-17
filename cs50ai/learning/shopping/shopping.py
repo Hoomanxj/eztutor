@@ -8,6 +8,7 @@ TEST_SIZE = 0.4
 
 model = KNeighborsClassifier(n_neighbors=1)
 
+
 def main():
 
     # Check command-line arguments
@@ -69,26 +70,26 @@ def load_data(filename):
             labels = []
             for row in reader:
                 evidence.append([
-                        int(float(row[0])),
-                        float(row[1]),
-                        int(float(row[2])),
-                        int(float(row[3])),
-                        float(row[4]),
-                        int(float(row[5])),
-                        float(row[6]),
-                        float(row[7]),
-                        float(row[8]),
-                        float(row[9]),
-                        month_to_int(row[10]),
-                        int(float(row[11])),
-                        int(float(row[12])),
-                        int(float(row[13])),
-                        int(float(row[14])),
-                        1 if row[15] == "Returning_Visitor" else 0,
-                        1 if row[16] == "TRUE" else 0 
-                    ])
+                    int(float(row[0])),
+                    float(row[1]),
+                    int(float(row[2])),
+                    int(float(row[3])),
+                    float(row[4]),
+                    int(float(row[5])),
+                    float(row[6]),
+                    float(row[7]),
+                    float(row[8]),
+                    float(row[9]),
+                    month_to_int(row[10]),
+                    int(float(row[11])),
+                    int(float(row[12])),
+                    int(float(row[13])),
+                    int(float(row[14])),
+                    1 if row[15] == "Returning_Visitor" else 0,
+                    1 if row[16] == "TRUE" else 0
+                ])
                 labels.append(1 if row[17] == "TRUE" else 0)
-                
+
             return evidence, labels
         except Exception as e:
             return e
@@ -118,8 +119,10 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    true_positive = sum(1 for actual, predicted in zip(labels, predictions) if actual == predicted == 1)
-    true_negative = sum(1 for actual, predicted in zip(labels, predictions) if actual == predicted == 0)
+    true_positive = sum(1 for actual, predicted in zip(
+        labels, predictions) if actual == predicted == 1)
+    true_negative = sum(1 for actual, predicted in zip(
+        labels, predictions) if actual == predicted == 0)
 
     total_positive = sum(1 for actual in labels if actual == 1)
     total_negative = sum(1 for actual in labels if actual == 0)
@@ -127,6 +130,7 @@ def evaluate(labels, predictions):
     sensitivity = true_positive / total_positive if total_positive else 0
     specificity = true_negative / total_negative if total_negative else 0
     return sensitivity, specificity
+
 
 def month_to_int(month):
     """ A helper to convert months to int """
@@ -136,5 +140,7 @@ def month_to_int(month):
     for i, m in enumerate(months):
         if month == months[i]:
             return i
+
+
 if __name__ == "__main__":
     main()
