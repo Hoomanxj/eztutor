@@ -85,10 +85,10 @@ def load_data(filename):
                         int(float(row[13])),
                         int(float(row[14])),
                         1 if row[15] == "returning" else 0,
-                        1 if row[16] == "TRUE" else 0
+                        1 if row[16].strip().lower() == "true" else 0
                     ])
                 labels.append(
-                    1 if row[-1] == "TRUE" else 0
+                    1 if row[-1].strip().lower() == "true" else 0
                 )
             return evidence, labels
         except Exception as e:
